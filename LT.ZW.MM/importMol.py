@@ -25,23 +25,27 @@ class importMol():
 
         mF=open(molFile, 'r')
         lines=mF.readlines()
+        
         atomCounts = lines[3].split()
         self.numAtom = int(atomCounts[0])
         self.numBond = int(atomCounts[1])
         
         self.cartMatrix  = np.zeros((self.numAtom,3))
         self.bondMatrix  = np.zeros((self.numAtom,self.numAtom))
+        
         for x in range(4,4+self.numAtom):
             atomrow=lines[x].split()
             for y in range(0,2):
                 self.cartMatrix[x-4,y]=atomrow[y]
             self.atomType.append(atomrow[3])
+            
         for x in range(4+self.numAtom,4+self.numAtom+self.numBond):
             bondrow=lines[x].split()
             i=int(bondrow[0])-1
             j=int(bondrow[1])-1
             self.bondMatrix[i,j]= int(bondrow[2])
             self.bondMatrix[j,i]= int(bondrow[2]) 
+            
         mF.close()
         
     def bondLength(self,cartMatrix,bondMatrix,numBond,numAtom):
