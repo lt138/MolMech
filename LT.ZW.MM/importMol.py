@@ -4,19 +4,21 @@ Created on Feb 20, 2014
 @author: Larry
 '''
 import numpy as np
+import itertools as its
+import math as m
 class importMol():
-    molFile =""
     numAtom=0
     numBond=0
     cartMatrix=np.matrix(0)
     bondMatrix=np.matrix(0)
     atomType=[]
     bondLength=np.matrix(0)
+    bondAngle=np.matrix(0)
     
     def __init__(self, molFile):
         self.readMolFile(molFile)
         self.bondLength(self.cartMatrix,self.bondMatrix,self.numBond,self.numAtom)
- 
+        self.bondAngle(self.cartMatrix,self.bondMatrix,self.numBond,self.numAtom,self.bondLengthM)
     
     def readMolFile(self,molFile):
         """reads an input mdl mol file line by line, determining the number of bonds and atoms in the molecule
@@ -56,4 +58,15 @@ class importMol():
             for y in range(0,numAtom):
                 if bondMatrix[x,y]!=0:
                     self.bondLengthM[x,y]=((cartMatrix[x,0]-cartMatrix[y,0])**2+(cartMatrix[x,1]-cartMatrix[y,1])**2+(cartMatrix[x,2]-cartMatrix[y,2])**2)**0.5
-        
+    def bondAngle(self,cartMatrix,bondMatrix,numBond,numAtom,bondLengthM):
+        comb= list(its.combinations(range(numAtom),3))
+        self.bondAngleM=np.zeros((len(comb),4))
+        for x in range(0,len(comb)):
+            if (bondMatrix[comb[x][1],comb[x][0]]!= 0) & (bondMatrix[comb[x][1],comb[x][2]]!= 0):
+                vec1=np.subtract(cartMatrix[comb[x][1],:],cartMatrix[comb[x][0],:])
+                vec2=np.subtract(cartMatrix[comb[x][1],:],cartMatrix[comb[x][2],:])
+                dotp=np.dot(vec1,vec2)
+                self.bondAngleM[x,0]=m.acos(dotp/(bondLengthM[comb[x][1],comb[x][0]]*bondLengthM[comb[x][1],comb[x][2]]))
+                self.bondAngleM[x,1:]=[comb[x][0],comb[x][1],comb[x][2]]
+            else:
+                self.bondAngleM[x,1:]=[comb[x][0],comb[x][1],comb[x][2]] 

@@ -5,6 +5,10 @@ Created on Feb 20, 2014
 '''
 import importMol
 from importMol import importMol
-husky=importMol("benz.mol")
+husky=importMol("meth.mol")
 print husky.numAtom
+print husky.numBond
+print husky.atomType
 print husky.bondMatrix
+print husky.bondLengthM
+print husky.bondAngleM
