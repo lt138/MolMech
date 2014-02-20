@@ -58,15 +58,24 @@ class importMol():
             for y in range(0,numAtom):
                 if bondMatrix[x,y]!=0:
                     self.bondLengthM[x,y]=((cartMatrix[x,0]-cartMatrix[y,0])**2+(cartMatrix[x,1]-cartMatrix[y,1])**2+(cartMatrix[x,2]-cartMatrix[y,2])**2)**0.5
+  
     def bondAngle(self,cartMatrix,bondMatrix,numBond,numAtom,bondLengthM):
+        """ Determines the bond angle between all the groups of 3 bonded atoms in the molecule"""
+        # enumerate all the possible ways to arrange atoms in the molecule into groups of 3 without repetition. 
         comb= list(its.combinations(range(numAtom),3))
         self.bondAngleM=np.zeros((len(comb),4))
+        
         for x in range(0,len(comb)):
+            #only compute the bond angle for bonded groups of 3 atoms.
             if (bondMatrix[comb[x][1],comb[x][0]]!= 0) & (bondMatrix[comb[x][1],comb[x][2]]!= 0):
+                #determine the distance vectors along the internuclear axis and takes the dot product of the two 
                 vec1=np.subtract(cartMatrix[comb[x][1],:],cartMatrix[comb[x][0],:])
                 vec2=np.subtract(cartMatrix[comb[x][1],:],cartMatrix[comb[x][2],:])
                 dotp=np.dot(vec1,vec2)
+                # computes the bond angle by taking the arccosine of the dot product of the two vectors
+                # divided by the product of the vector norms
                 self.bondAngleM[x,0]=m.acos(dotp/(bondLengthM[comb[x][1],comb[x][0]]*bondLengthM[comb[x][1],comb[x][2]]))
                 self.bondAngleM[x,1:]=[comb[x][0],comb[x][1],comb[x][2]]
+                
             else:
                 self.bondAngleM[x,1:]=[comb[x][0],comb[x][1],comb[x][2]] 
