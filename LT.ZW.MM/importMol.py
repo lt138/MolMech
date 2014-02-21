@@ -70,7 +70,7 @@ class importMol():
         
         for x in range(0,len(comb)):
             #only compute the bond angle for bonded groups of 3 atoms.
-            if (bondMatrix[comb[x][1],comb[x][0]]!= 0) & (bondMatrix[comb[x][1],comb[x][2]]!= 0):
+            if (bondMatrix[comb[x][1],comb[x][0]]!= 0) and (bondMatrix[comb[x][1],comb[x][2]]!= 0):
                 #determine the distance vectors along the internuclear axis and takes the dot product of the two 
                 vec1=np.subtract(cartMatrix[comb[x][0],:],cartMatrix[comb[x][1],:])
                 vec2=np.subtract(cartMatrix[comb[x][2],:],cartMatrix[comb[x][1],:])

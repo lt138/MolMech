@@ -4,7 +4,7 @@ Created on Feb 20, 2014
 @author: Larry
 '''
 from importMol import importMol
-husky=importMol("eth.mol")
+husky=importMol("meth.mol")
 print husky.numAtom
 print husky.numBond
 print husky.atomType
